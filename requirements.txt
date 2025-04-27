@@ -8,4 +8,4 @@ numpy
 requests
 pydeck
 folium
-streamlit_folium
+streamlit-folium
