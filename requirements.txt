@@ -1,9 +1,6 @@
 streamlit
 pandas
 openai
-calculate_crs
-geocode_address
-get_local_crimes
 numpy
 requests
 pydeck
