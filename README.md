@@ -18,7 +18,7 @@ A Streamlit web application that helps travelers assess safety risk based on rea
 
 1. Clone this repository:
     ```bash
-    git clone https://github.com/your-username/Travel_Safety_Assistant.git
+    git clone https://github.com/ShellyLin-coder/Travel_Safety_Assistant.git
     cd Travel_Safety_Assistant
     ```
 
