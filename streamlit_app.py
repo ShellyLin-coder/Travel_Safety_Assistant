@@ -4,6 +4,9 @@ from utils import analyze_risk_nearby, get_lat_lon_from_address, call_gpt_sugges
 from streamlit_folium import st_folium
 import folium
 
+
+
+
 st.set_page_config(page_title="Chicago Travel Safety Assistant", layout="centered")
 
 st.title("🚨 Chicago Travel Safety Assistant")

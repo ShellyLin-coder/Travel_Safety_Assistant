@@ -6,3 +6,4 @@ requests
 pydeck
 folium
 streamlit-folium
+zipfile

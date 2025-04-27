@@ -5,15 +5,22 @@ import numpy as np
 import requests
 from math import radians, cos, sin, asin, sqrt
 import openai
+import zipfile
 
 # --- Load datasets (adjust paths if needed) ---
+def load_csv_from_zip(zip_path, filename_inside_zip, **kwargs):
+    with zipfile.ZipFile(zip_path) as z:
+        with z.open(filename_inside_zip) as f:
+            return pd.read_csv(f, **kwargs)
+
 CRIME_DATA_PATH = 'cleaned_crimes_data.csv'
 COMMUNITY_SCORE_PATH = 'community_crs_scores.csv'
 COMMUNITY_AREA_PATH = 'community_areas.csv'
 
-crimes_df = pd.read_csv(CRIME_DATA_PATH, parse_dates=['Date'])
+crimes_df = load_csv_from_zip('cleaned_crimes_data.zip', 'cleaned_crimes_data.csv', parse_dates=['Date'])
 community_scores_df = pd.read_csv(COMMUNITY_SCORE_PATH)
 community_areas_df = pd.read_csv(COMMUNITY_AREA_PATH)
+
 
 # Mapping Community Area number to Area Name
 area_map = dict(zip(community_areas_df['Community Area'], community_areas_df['Area Name']))
