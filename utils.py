@@ -7,20 +7,20 @@ from math import radians, cos, sin, asin, sqrt
 import openai
 import zipfile
 
-# --- Load datasets (adjust paths if needed) ---
+# --- Load datasets from zip ---
 def load_csv_from_zip(zip_path, filename_inside_zip, **kwargs):
     with zipfile.ZipFile(zip_path) as z:
         with z.open(filename_inside_zip) as f:
             return pd.read_csv(f, **kwargs)
 
-CRIME_DATA_PATH = 'cleaned_crimes_data.csv'
+# Paths to community datasets
 COMMUNITY_SCORE_PATH = 'community_crs_scores.csv'
 COMMUNITY_AREA_PATH = 'community_areas.csv'
 
+# Load datasets
 crimes_df = load_csv_from_zip('cleaned_crimes_data.zip', 'cleaned_crimes_data.csv', parse_dates=['Date'])
 community_scores_df = pd.read_csv(COMMUNITY_SCORE_PATH)
 community_areas_df = pd.read_csv(COMMUNITY_AREA_PATH)
-
 
 # Mapping Community Area number to Area Name
 area_map = dict(zip(community_areas_df['Community Area'], community_areas_df['Area Name']))
@@ -84,6 +84,7 @@ def analyze_risk_nearby(address, lat, lon):
         if not match_row.empty:
             community_crs = match_row.iloc[0]['CRS_Score']
 
+
     report_text = f"""
 Address: {address}
 Community Area: {community_area} - {area_name}
@@ -111,11 +112,23 @@ Community CRS Score: community_crs_display = f"{community_crs:.2f}" if community
 
 def call_gpt_suggestion(prompt_text, openai_api_key):
     client = openai.OpenAI(api_key=openai_api_key)
+    prompt = f"""
+Below is a safety analysis report for a specific address:
+
+{prompt_text}
+
+Based on this report, please provide 4-5 travel safety suggestions for tourists.
+Use both the area-level score and the local risk indicators within 500 meters to support your advice.
+Also, determine which part of the area (East, South, West, North) the address is located in,
+and compare the local crime situation with the overall community area.
+"""
+
+
     response = client.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role": "system", "content": "You are a travel safety advisor specializing in Chicago. Provide practical, clear advice to tourists."},
-            {"role": "user", "content": prompt_text}
+            {"role": "system", "content": "You are a safety advisor specializing in travel around Chicago. You provide practical travel advice for tourists."},
+            {"role": "user", "content": prompt}
         ],
         temperature=0.7
     )

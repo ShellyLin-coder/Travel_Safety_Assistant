@@ -4,9 +4,6 @@ from utils import analyze_risk_nearby, get_lat_lon_from_address, call_gpt_sugges
 from streamlit_folium import st_folium
 import folium
 
-
-
-
 st.set_page_config(page_title="Chicago Travel Safety Assistant", layout="centered")
 
 st.title("🚨 Chicago Travel Safety Assistant")
@@ -34,20 +31,24 @@ if GOOGLE_API_KEY and OPENAI_API_KEY:
                 
                 m = folium.Map(location=[lat, lon], zoom_start=15)
                 folium.Marker(
-                [lat, lon],
-                popup="Input Address",
-                icon=folium.Icon(color="blue", icon="info-sign")
+                    [lat, lon],
+                    popup="Input Address",
+                    icon=folium.Icon(color="blue", icon="info-sign")
                 ).add_to(m)
                 
                 folium.Circle(
-                location=[lat, lon],
-                radius=500,
-                color="blue",
-                fill=True,
-                fill_opacity=0.1
+                    location=[lat, lon],
+                    radius=500,
+                    color="blue",
+                    fill=True,
+                    fill_opacity=0.1
                 ).add_to(m)
 
-                st_folium(m, width=700, height=450)
+                # Embed folium map directly
+                
+                st_folium(m, width=700, height=300, use_container_width=True)
+
+                st.markdown("---")
 
                 st.subheader("📊 Risk Summary (within 500m)")
                 st.markdown(f"<h4>🔎 Total Crimes: {results['C']}</h4>", unsafe_allow_html=True)
@@ -66,9 +67,10 @@ if GOOGLE_API_KEY and OPENAI_API_KEY:
                         st.subheader("✍️ GPT-4 Travel Advice")
                         st.write(advice)
         
-     # --- Download the ouput ---                   
+     # --- Download the output ---                   
                         
-                        summary_text = f"""📍 Address: {address}
+                        summary_text = f"""===== Chicago Travel Safety Assistant Report =====
+                📍 Address: {address}
 
                 📊 Risk Summary (within 500m):
                 - Total Crimes: {results['C']}
